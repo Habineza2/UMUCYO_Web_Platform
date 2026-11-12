@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMUCYO | Savings Transaction</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 30px;
+            background: #f3f5f9;
+            font-family: Arial, sans-serif;
+            color: #1e293b;
+        }
+
+        .card {
+            max-width: 650px;
+            margin: 30px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,.06);
+        }
+
+        label {
+            display: block;
+            margin: 17px 0 7px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        button, a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 18px;
+            border: 0;
+            border-radius: 8px;
+            background: #15803d;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        a { background: #475569; }
+
+        .balance {
+            padding: 15px;
+            border-radius: 8px;
+            background: #eff6ff;
+            margin: 20px 0;
+        }
+
+        .flash {
+            padding: 12px;
+            border-radius: 7px;
+            margin-bottom: 12px;
+        }
+
+        .flash.danger { background: #fee2e2; color: #991b1b; }
+        .flash.warning { background: #fef3c7; color: #92400e; }
+    </style>
+</head>
+
+<body>
+<div class="card">
+
+    <h1>Savings Transaction</h1>
+    <h3>{{ saving.saving_name }}</h3>
+
+    <div class="balance">
+        Current Balance:
+        <strong>{{ "{:,.2f}".format(saving.current_balance) }} RWF</strong>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <label>Transaction Type *</label>
+        <select name="transaction_type" required>
+            <option value="deposit">Deposit</option>
+            <option value="withdrawal">Withdrawal</option>
+        </select>
+
+        <label>Amount (RWF) *</label>
+        <input type="number" name="amount"
+               min="0.01" step="0.01" required>
+
+        <label>Transaction Date *</label>
+        <input type="date" name="transaction_date" required>
+
+        <label>Payment Method *</label>
+        <select name="payment_method" required>
+            <option value="">Select payment method</option>
+            <option value="Cash">Cash</option>
+            <option value="Bank">Bank</option>
+            <option value="Mobile Money">Mobile Money</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <label>Reference</label>
+        <input type="text" name="reference" maxlength="100">
+
+        <label>Notes</label>
+        <textarea name="notes" rows="3"></textarea>
+
+        <button type="submit">Save Transaction</button>
+
+        <a href="{{ url_for('savings_overview') }}">Cancel</a>
+
+    </form>
+</div>
+</body>
+</html>

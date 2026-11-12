@@ -1,0 +1,566 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>UMUCYO | Dashboard</title>
+
+    <style>
+        :root {
+            --primary: #163b70;
+            --primary-dark: #102b52;
+            --primary-light: #eaf1fb;
+            --accent: #2874d0;
+            --success: #198754;
+            --danger: #dc3545;
+            --background: #f4f7fb;
+            --white: #ffffff;
+            --text: #263445;
+            --muted: #718096;
+            --border: #e5eaf1;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--background);
+            color: var(--text);
+        }
+
+        header {
+            min-height: 75px;
+            background: linear-gradient(110deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 16px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 3px 12px rgba(16, 43, 82, 0.18);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .brand-logo {
+            width: 43px;
+            height: 43px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.16);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            font-weight: 800;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .brand h2 {
+            margin: 0;
+            font-size: 20px;
+            letter-spacing: 0.3px;
+        }
+
+        .brand small {
+            display: block;
+            color: #c9d8ee;
+            font-size: 11px;
+            margin-top: 3px;
+            letter-spacing: 1.2px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-user {
+            color: #dce8f7;
+            font-size: 13px;
+        }
+
+        .logout-button {
+            background: #ffffff;
+            color: var(--primary);
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+
+        .logout-button:hover {
+            background: #eaf1fb;
+            transform: translateY(-1px);
+        }
+
+        main {
+            width: 100%;
+            max-width: 1250px;
+            margin: auto;
+            padding: 35px 25px 60px;
+        }
+
+        .page-heading { margin-bottom: 25px; }
+
+        .page-heading h1 {
+            margin: 0 0 7px;
+            font-size: 27px;
+            color: var(--primary-dark);
+        }
+
+        .page-heading p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .message {
+            padding: 14px 17px;
+            margin-bottom: 15px;
+            border-radius: 9px;
+            font-size: 14px;
+            border: 1px solid transparent;
+        }
+
+        .success {
+            background: #e8f7ee;
+            color: #176b32;
+            border-color: #c7ebd3;
+        }
+
+        .danger {
+            background: #fff0f0;
+            color: #a00000;
+            border-color: #ffd1d1;
+        }
+
+        .warning {
+            background: #fff7df;
+            color: #856404;
+            border-color: #f5e4a8;
+        }
+
+        .welcome {
+            background: var(--white);
+            padding: 28px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 18px rgba(30, 55, 90, 0.04);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .welcome-info h2 {
+            margin: 0 0 8px;
+            color: var(--primary-dark);
+            font-size: 22px;
+        }
+
+        .welcome-info p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .profile-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-top: 22px;
+        }
+
+        .profile-item { min-width: 130px; }
+
+        .profile-label {
+            display: block;
+            color: var(--muted);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            margin-bottom: 6px;
+        }
+
+        .profile-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 11px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .status-active {
+            background: #e3f7eb;
+            color: #168044;
+        }
+
+        .status-inactive {
+            background: #ffe8e8;
+            color: #c02c2c;
+        }
+
+        .profile-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 18px;
+            background: var(--primary-light);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 27px;
+            font-weight: 800;
+        }
+
+        .section { margin-top: 28px; }
+
+        .section-heading { margin-bottom: 16px; }
+
+        .section-heading h2 {
+            margin: 0 0 6px;
+            color: var(--primary-dark);
+            font-size: 19px;
+        }
+
+        .section-heading p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .management-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+        }
+
+        .action-card {
+            background: var(--white);
+            padding: 23px;
+            border-radius: 13px;
+            border: 1px solid var(--border);
+            text-decoration: none;
+            color: var(--text);
+            display: block;
+            transition: 0.2s ease;
+            box-shadow: 0 3px 12px rgba(30, 55, 90, 0.03);
+        }
+
+        .action-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 9px 22px rgba(30, 55, 90, 0.09);
+            border-color: #b8cdea;
+        }
+
+        .action-icon {
+            width: 46px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .green-icon {
+            background: #e6f6ed;
+            color: var(--success);
+        }
+
+        .purple-icon {
+            background: #f0eaff;
+            color: #7040bd;
+        }
+
+        .gold-icon {
+            background: #fff4d6;
+            color: #a66b00;
+        }
+
+        .action-card h3 {
+            margin: 0 0 8px;
+            font-size: 16px;
+            color: var(--primary-dark);
+        }
+
+        .action-card p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .action-arrow {
+            display: block;
+            margin-top: 17px;
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--muted);
+            font-size: 12px;
+            border-top: 1px solid var(--border);
+            background: white;
+        }
+
+        @media (max-width: 650px) {
+            header { padding: 15px 18px; }
+            .brand h2 { font-size: 16px; }
+            .header-user { display: none; }
+            main { padding: 25px 16px 40px; }
+            .welcome { padding: 21px; }
+            .profile-details { gap: 17px; }
+            .page-heading h1 { font-size: 23px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="brand">
+        <div class="brand-logo">U</div>
+        <div>
+            <h2>UMUCYO Business Manager</h2>
+            <small>BUSINESS MANAGEMENT PLATFORM</small>
+        </div>
+    </div>
+
+    <div class="header-right">
+        <span class="header-user">
+            {{ current_user.full_name }}
+        </span>
+
+        <form method="POST" action="{{ url_for('logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="logout-button" type="submit">Logout</button>
+        </form>
+    </div>
+</header>
+
+<main>
+
+    <div class="page-heading">
+        <h1>Dashboard</h1>
+        <p>Welcome to your UMUCYO Business Manager workspace.</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="message {{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <div class="welcome">
+        <div class="welcome-info">
+            <h2>Welcome, {{ current_user.full_name }}!</h2>
+
+            <p>
+                You are successfully logged in to UMUCYO Business Manager.
+            </p>
+
+            <div class="profile-details">
+
+                <div class="profile-item">
+                    <span class="profile-label">Email Address</span>
+                    <span class="profile-value">{{ current_user.email }}</span>
+                </div>
+
+                <div class="profile-item">
+                    <span class="profile-label">Account Role</span>
+                    <span class="profile-value">{{ current_user.role|capitalize }}</span>
+                </div>
+
+                <div class="profile-item">
+                    <span class="profile-label">Account Status</span>
+
+                    {% if current_user.is_active %}
+                        <span class="status status-active">Active</span>
+                    {% else %}
+                        <span class="status status-inactive">Inactive</span>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+        <div class="profile-avatar">
+            {{ current_user.full_name[0]|upper }}
+        </div>
+    </div>
+
+
+    {% if current_user.is_administrator %}
+
+    <!-- USER MANAGEMENT -->
+
+    <section class="section">
+        <div class="section-heading">
+            <h2>User Management</h2>
+            <p>
+                Register employees and manage their access
+                to the business management platform.
+            </p>
+        </div>
+
+        <div class="management-actions">
+
+            <a class="action-card" href="{{ url_for('create_staff') }}">
+                <div class="action-icon">+</div>
+                <h3>Create Staff Account</h3>
+                <p>
+                    Register a new employee and provide
+                    access to the platform.
+                </p>
+                <span class="action-arrow">Create account →</span>
+            </a>
+
+            <a class="action-card" href="{{ url_for('staff_directory') }}">
+                <div class="action-icon green-icon">☷</div>
+                <h3>Staff Directory</h3>
+                <p>
+                    View registered employees and manage
+                    their account status.
+                </p>
+                <span class="action-arrow">View employees →</span>
+            </a>
+
+        </div>
+    </section>
+
+
+    <!-- EXPENSE ADMINISTRATION -->
+
+    <section class="section">
+        <div class="section-heading">
+            <h2>Expense Administration</h2>
+            <p>
+                Review submitted expenses and manage
+                administrator approval decisions.
+            </p>
+        </div>
+
+        <div class="management-actions">
+
+            <a class="action-card" href="{{ url_for('expense_management') }}">
+                <div class="action-icon purple-icon">$</div>
+                <h3>Manage Expenses</h3>
+                <p>
+                    View all submitted expenses, review
+                    records, and manage expense approvals.
+                </p>
+                <span class="action-arrow">
+                    Open expense management →
+                </span>
+            </a>
+
+        </div>
+    </section>
+
+
+    <!-- SAVINGS MANAGEMENT - NEW -->
+
+    <section class="section">
+        <div class="section-heading">
+            <h2>Financial Management</h2>
+            <p>
+                Manage business savings goals, deposits,
+                withdrawals, and financial progress.
+            </p>
+        </div>
+
+        <div class="management-actions">
+
+            <a class="action-card" href="{{ url_for('savings_overview') }}">
+                <div class="action-icon gold-icon">💰</div>
+
+                <h3>Savings Management</h3>
+
+                <p>
+                    Create savings goals, record deposits
+                    and withdrawals, monitor balances,
+                    and track savings progress.
+                </p>
+
+                <span class="action-arrow">
+                    Open savings management →
+                </span>
+            </a>
+
+        </div>
+    </section>
+
+    {% endif %}
+
+
+    <!-- BUSINESS OPERATIONS -->
+
+    <section class="section">
+
+        <div class="section-heading">
+            <h2>Business Operations</h2>
+            <p>
+                Access business activities and submit
+                operational records.
+            </p>
+        </div>
+
+        <div class="management-actions">
+
+            <a class="action-card" href="{{ url_for('create_expense') }}">
+                <div class="action-icon green-icon">RWF</div>
+
+                <h3>Submit New Expense</h3>
+
+                <p>
+                    Record a business expense for review
+                    and administrator approval.
+                </p>
+
+                <span class="action-arrow">
+                    Record expense →
+                </span>
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    UMUCYO Business Manager &copy; 2026
+    | Business Management Platform
+</footer>
+
+</body>
+</html>

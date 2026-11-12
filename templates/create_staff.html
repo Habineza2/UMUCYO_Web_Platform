@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Staff | UMUCYO</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 30px;
+            background: #f3f5f9;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+        }
+
+        h1 {
+            color: #163b70;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 25px;
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 6px;
+            background: #163b70;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .message {
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+
+        .success {
+            background: #e3f7e9;
+            color: #176b32;
+        }
+
+        .danger {
+            background: #ffe5e5;
+            color: #a00000;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 20px;
+            color: #163b70;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Create Staff Account</h1>
+
+    <p>Register a new UMUCYO staff member.</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="message {{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+
+        <input type="hidden"
+               name="csrf_token"
+               value="{{ csrf_token() }}">
+
+        <label>Full Name</label>
+
+        <input
+            type="text"
+            name="full_name"
+            placeholder="Enter staff full name"
+            required
+        >
+
+        <label>Email Address</label>
+
+        <input
+            type="email"
+            name="email"
+            placeholder="Enter staff email"
+            required
+        >
+
+        <label>Password</label>
+
+        <input
+            type="password"
+            name="password"
+            minlength="12"
+            required
+        >
+
+        <label>Confirm Password</label>
+
+        <input
+            type="password"
+            name="confirm_password"
+            minlength="12"
+            required
+        >
+
+        <button type="submit">
+            Create Staff Account
+        </button>
+
+    </form>
+
+    <a class="back" href="{{ url_for('dashboard') }}">
+        Back to Dashboard
+    </a>
+
+</div>
+
+</body>
+</html>

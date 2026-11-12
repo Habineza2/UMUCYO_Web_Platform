@@ -1,0 +1,487 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Staff Directory | UMUCYO</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f5f9;
+            color: #263445;
+        }
+
+        header {
+            background: #163b70;
+            color: white;
+            padding: 22px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        main {
+            padding: 35px;
+        }
+
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        }
+
+        h1, h2 {
+            color: #163b70;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            padding: 20px;
+            border-radius: 9px;
+            background: #edf2f8;
+        }
+
+        .summary-card h3 {
+            margin: 0 0 10px;
+            font-size: 14px;
+            color: #586779;
+        }
+
+        .summary-card p {
+            font-size: 27px;
+            font-weight: bold;
+            margin: 0;
+            color: #163b70;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 11px 17px;
+            border-radius: 6px;
+            text-decoration: none;
+            border: none;
+            color: white;
+            background: #163b70;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        .create-button {
+            background: #198754;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .search-form input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #e5e9ef;
+        }
+
+        th {
+            background: #edf2f8;
+            color: #163b70;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 11px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .active {
+            color: #176b32;
+            background: #e3f7e9;
+        }
+
+        .inactive {
+            color: #a00000;
+            background: #ffe5e5;
+        }
+
+        .activate-button {
+            background: #198754;
+        }
+
+        .deactivate-button {
+            background: #d9534f;
+        }
+
+        .message {
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+        }
+
+        .success {
+            background: #e3f7e9;
+            color: #176b32;
+        }
+
+        .danger {
+            background: #ffe5e5;
+            color: #a00000;
+        }
+
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .empty {
+            padding: 25px;
+            text-align: center;
+            color: #777;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 25px;
+            color: #163b70;
+            text-decoration: none;
+        }
+
+        @media (max-width: 700px) {
+
+            main {
+                padding: 18px;
+            }
+
+            header {
+                padding: 18px;
+            }
+
+            .summary {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header>
+
+    <h2>UMUCYO Business Manager</h2>
+
+    <a class="button"
+       href="{{ url_for('dashboard') }}">
+        Dashboard
+    </a>
+
+</header>
+
+<main>
+
+    <div class="container">
+
+        <h1>Staff Directory</h1>
+
+        <p>Manage registered UMUCYO staff accounts.</p>
+
+
+        <!-- FLASH MESSAGES -->
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% for category, message in messages %}
+
+                <div class="message {{ category }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endwith %}
+
+
+        <!-- STAFF SUMMARY -->
+
+        <div class="summary">
+
+            <div class="summary-card">
+
+                <h3>Total Staff</h3>
+
+                <p>{{ total_staff }}</p>
+
+            </div>
+
+            <div class="summary-card">
+
+                <h3>Active Staff</h3>
+
+                <p>{{ active_staff }}</p>
+
+            </div>
+
+            <div class="summary-card">
+
+                <h3>Inactive Staff</h3>
+
+                <p>{{ inactive_staff }}</p>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+
+        <div class="actions">
+
+            <a class="button create-button"
+               href="{{ url_for('create_staff') }}">
+
+                + Create Staff
+
+            </a>
+
+        </div>
+
+
+        <!-- SEARCH -->
+
+        <form class="search-form"
+              method="GET"
+              action="{{ url_for('staff_directory') }}">
+
+            <input
+                type="text"
+                name="q"
+                value="{{ search_query }}"
+                placeholder="Search by staff name or email..."
+            >
+
+            <button class="button" type="submit">
+                Search
+            </button>
+
+            <a class="button"
+               href="{{ url_for('staff_directory') }}">
+                Clear
+            </a>
+
+        </form>
+
+
+        <!-- STAFF TABLE -->
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Full Name</th>
+                        <th>Email Address</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Date Registered</th>
+                        <th>Action</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for staff in staff_members %}
+
+                    <tr>
+
+                        <td>{{ staff.id }}</td>
+
+                        <td>{{ staff.full_name }}</td>
+
+                        <td>{{ staff.email }}</td>
+
+                        <td>{{ staff.role|capitalize }}</td>
+
+                        <td>
+
+                            {% if staff.is_active %}
+
+                                <span class="status active">
+                                    Active
+                                </span>
+
+                            {% else %}
+
+                                <span class="status inactive">
+                                    Inactive
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {% if staff.created_at %}
+
+                                {{ staff.created_at.strftime('%d/%m/%Y') }}
+
+                            {% else %}
+
+                                —
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <form
+                                method="POST"
+                                action="{{ url_for(
+                                    'toggle_staff_status',
+                                    user_id=staff.id
+                                ) }}"
+                                onsubmit="return confirm(
+                                    'Are you sure you want to {{ 'activate' if not staff.is_active else 'deactivate' }} this staff account?'
+                                );"
+                            >
+
+                                <input
+                                    type="hidden"
+                                    name="csrf_token"
+                                    value="{{ csrf_token() }}"
+                                >
+
+                                <input
+                                    type="hidden"
+                                    name="q"
+                                    value="{{ search_query }}"
+                                >
+
+                                {% if staff.is_active %}
+
+                                    <button
+                                        type="submit"
+                                        class="button deactivate-button"
+                                    >
+                                        Deactivate
+                                    </button>
+
+                                {% else %}
+
+                                    <button
+                                        type="submit"
+                                        class="button activate-button"
+                                    >
+                                        Activate
+                                    </button>
+
+                                {% endif %}
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+
+                        <td colspan="7" class="empty">
+
+                            {% if search_query %}
+
+                                No staff members match your search.
+
+                            {% else %}
+
+                                No staff accounts have been registered yet.
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <a class="back"
+           href="{{ url_for('dashboard') }}">
+
+            ← Back to Dashboard
+
+        </a>
+
+    </div>
+
+</main>
+
+</body>
+</html>

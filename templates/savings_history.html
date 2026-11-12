@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMUCYO | Savings History</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: Arial, sans-serif;
+            background: #f3f5f9;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: auto;
+        }
+
+        .panel {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+        }
+
+        th, td {
+            padding: 13px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th { background: #f8fafc; }
+
+        .deposit { color: #15803d; font-weight: bold; }
+        .withdrawal { color: #dc2626; font-weight: bold; }
+
+        a {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background: #475569;
+            color: white;
+            border-radius: 7px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <a href="{{ url_for('savings_overview') }}">Back to Savings</a>
+
+    <h1>{{ saving.saving_name }} — Transaction History</h1>
+
+    <p>
+        Current Balance:
+        <strong>{{ "{:,.2f}".format(saving.current_balance) }} RWF</strong>
+    </p>
+
+    <div class="panel">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Transaction ID</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Payment Method</th>
+                    <th>Reference</th>
+                    <th>Recorded By</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction.transaction_id }}</td>
+                    <td>{{ transaction.transaction_date.strftime("%d/%m/%Y") }}</td>
+
+                    <td class="{{ transaction.transaction_type }}">
+                        {{ transaction.transaction_type.title() }}
+                    </td>
+
+                    <td>{{ "{:,.2f}".format(transaction.amount) }} RWF</td>
+                    <td>{{ transaction.payment_method }}</td>
+                    <td>{{ transaction.reference or "-" }}</td>
+
+                    <td>
+                        {{ user_names.get(transaction.recorded_by_id, "Unknown") }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">No transactions recorded yet.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+</body>
+</html>

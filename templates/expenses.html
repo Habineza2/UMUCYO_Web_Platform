@@ -1,0 +1,439 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>UMUCYO | Expense Management</title>
+
+    <style>
+        :root {
+            --primary: #163b70;
+            --primary-dark: #102b52;
+            --background: #f4f7fb;
+            --white: #ffffff;
+            --text: #263445;
+            --muted: #718096;
+            --border: #e5eaf1;
+            --green: #198754;
+            --red: #dc3545;
+            --yellow: #d49b16;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--background);
+            color: var(--text);
+        }
+
+        header {
+            background: linear-gradient(110deg, #102b52, #163b70);
+            color: white;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        main {
+            max-width: 1400px;
+            margin: auto;
+            padding: 35px 25px;
+        }
+
+        .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .page-heading h1 {
+            margin: 0 0 7px;
+            color: var(--primary-dark);
+        }
+
+        .page-heading p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .back-button {
+            background: var(--primary);
+            color: white;
+            padding: 11px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .back-button:hover {
+            background: var(--primary-dark);
+        }
+
+        .message {
+            padding: 13px 16px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .success {
+            background: #e8f7ee;
+            color: #176b32;
+        }
+
+        .danger {
+            background: #fff0f0;
+            color: #a00000;
+        }
+
+        .warning {
+            background: #fff7df;
+            color: #856404;
+        }
+
+        .table-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            overflow: hidden;
+            box-shadow: 0 4px 18px rgba(30, 55, 90, 0.04);
+        }
+
+        .table-heading {
+            padding: 22px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table-heading h2 {
+            margin: 0;
+            color: var(--primary-dark);
+            font-size: 18px;
+        }
+
+        .table-heading p {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1200px;
+        }
+
+        th {
+            background: #f5f8fc;
+            color: #53657c;
+            text-align: left;
+            padding: 15px 14px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 15px 14px;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: #f9fbfe;
+        }
+
+        .expense-id {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .amount {
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 11px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: capitalize;
+        }
+
+        .pending {
+            background: #fff4d6;
+            color: #9b6c00;
+        }
+
+        .approved {
+            background: #e3f7eb;
+            color: #168044;
+        }
+
+        .rejected {
+            background: #ffe8e8;
+            color: #c02c2c;
+        }
+
+        /* APPROVE BUTTON */
+
+        .approve-button {
+            background: var(--green);
+            color: white;
+            border: none;
+            padding: 9px 15px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .approve-button:hover {
+            background: #146c43;
+            transform: translateY(-1px);
+        }
+
+        .empty-state {
+            padding: 55px 20px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .empty-state h3 {
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        @media (max-width: 650px) {
+            main {
+                padding: 25px 14px;
+            }
+
+            header {
+                padding: 18px;
+            }
+
+            .page-heading h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h2>UMUCYO Business Manager</h2>
+    </header>
+
+    <main>
+
+        <!-- PAGE HEADING -->
+
+        <div class="page-heading">
+
+            <div>
+                <h1>Expense Management</h1>
+                <p>Review and manage business expenses.</p>
+            </div>
+
+            <a href="{{ url_for('dashboard') }}" class="back-button">
+                ← Back to Dashboard
+            </a>
+
+        </div>
+
+
+        <!-- FLASH MESSAGES -->
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% for category, message in messages %}
+
+                <div class="message {{ category }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endwith %}
+
+
+        <!-- EXPENSE TABLE -->
+
+        <div class="table-card">
+
+            <div class="table-heading">
+                <h2>Expense Records</h2>
+                <p>All expenses submitted by business users.</p>
+            </div>
+
+            <div class="table-wrapper">
+
+                {% if expenses %}
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Expense ID</th>
+                            <th>Date</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Supplier</th>
+                            <th>Amount (RWF)</th>
+                            <th>Payment Method</th>
+                            <th>Recorded By</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for expense in expenses %}
+
+                        <tr>
+
+                            <td class="expense-id">
+                                {{ expense.expense_id }}
+                            </td>
+
+                            <td>
+                                {{ expense.expense_date.strftime('%d/%m/%Y') }}
+                            </td>
+
+                            <td>
+                                {{ expense.category }}
+                            </td>
+
+                            <td>
+                                {{ expense.description }}
+                            </td>
+
+                            <td>
+                                {{ expense.supplier or 'N/A' }}
+                            </td>
+
+                            <td class="amount">
+                                {{ "{:,.2f}".format(expense.amount) }}
+                            </td>
+
+                            <td>
+                                {{ expense.payment_method }}
+                            </td>
+
+                            <td>
+                                {{ user_names.get(expense.recorded_by_id, 'Unknown User') }}
+                            </td>
+
+                            <td>
+                                <span class="status {{ expense.status|lower }}">
+                                    {{ expense.status|capitalize }}
+                                </span>
+                            </td>
+
+                            <!-- APPROVAL ACTION -->
+
+                            <td>
+
+                                {% if expense.status == "pending" %}
+
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for('approve_expense', expense_id=expense.id) }}"
+                                        onsubmit="return confirm('Are you sure you want to approve this expense?');"
+                                    >
+
+                                        <input
+                                            type="hidden"
+                                            name="csrf_token"
+                                            value="{{ csrf_token() }}"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="approve-button"
+                                        >
+                                            Approve
+                                        </button>
+
+                                    </form>
+
+                                {% elif expense.status == "approved" %}
+
+                                    <span style="color: #168044; font-weight: 700;">
+                                        Approved
+                                    </span>
+
+                                {% elif expense.status == "rejected" %}
+
+                                    <span style="color: #c02c2c; font-weight: 700;">
+                                        Rejected
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+                {% else %}
+
+                <div class="empty-state">
+                    <h3>No Expenses Found</h3>
+                    <p>Submitted expenses will appear here.</p>
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer>
+        UMUCYO Business Manager &copy; 2026
+    </footer>
+
+</body>
+</html>

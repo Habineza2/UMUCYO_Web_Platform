@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Expense | UMUCYO</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px;
+            background: #f3f5f9;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 30px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+
+        h1 {
+            color: #163b70;
+        }
+
+        label {
+            display: block;
+            margin-top: 17px;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            background: #163b70;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #24528e;
+        }
+
+        .message {
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+
+        .success {
+            background: #e3f7e9;
+            color: #176b32;
+        }
+
+        .danger {
+            background: #ffe5e5;
+            color: #a00000;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 20px;
+            color: #163b70;
+            text-decoration: none;
+        }
+
+        .pending {
+            margin-top: 15px;
+            padding: 12px;
+            background: #fff4d6;
+            color: #805500;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Submit New Expense</h1>
+
+    <p>Enter the details of the business expense.</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="message {{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <div class="pending">
+        All submitted expenses require administrator approval.
+    </div>
+
+    <form method="POST">
+
+        <input type="hidden"
+               name="csrf_token"
+               value="{{ csrf_token() }}">
+
+        <label>Expense Date *</label>
+        <input type="date"
+               name="expense_date"
+               required>
+
+        <label>Expense Category *</label>
+        <select name="category" required>
+            <option value="">Select Category</option>
+            <option value="Rent">Rent</option>
+            <option value="Transport">Transport</option>
+            <option value="Utilities">Utilities</option>
+            <option value="Salaries">Salaries</option>
+            <option value="Stock Purchase">Stock Purchase</option>
+            <option value="Maintenance">Maintenance</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <label>Description *</label>
+        <textarea name="description"
+                  placeholder="Describe the expense"
+                  required></textarea>
+
+        <label>Supplier</label>
+        <input type="text"
+               name="supplier"
+               placeholder="Enter supplier name">
+
+        <label>Amount (RWF) *</label>
+        <input type="number"
+               name="amount"
+               min="0.01"
+               step="0.01"
+               placeholder="Enter amount"
+               required>
+
+        <label>Payment Method *</label>
+        <select name="payment_method" required>
+            <option value="">Select Payment Method</option>
+            <option value="Cash">Cash</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+            <option value="Mobile Money">Mobile Money</option>
+            <option value="Card">Card</option>
+            <option value="Credit">Credit</option>
+        </select>
+
+        <label>Reference</label>
+        <input type="text"
+               name="reference"
+               placeholder="Receipt or transaction reference">
+
+        <button type="submit">Submit Expense</button>
+
+    </form>
+
+    <a class="back" href="{{ url_for('dashboard') }}">
+        Back to Dashboard
+    </a>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMUCYO | Create Savings Goal</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 30px;
+            background: #f3f5f9;
+            font-family: Arial, sans-serif;
+            color: #1e293b;
+        }
+
+        .form-card {
+            max-width: 650px;
+            margin: 30px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,.06);
+        }
+
+        h1 { margin-top: 0; }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin: 17px 0 7px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        textarea { resize: vertical; }
+
+        button, .back {
+            display: inline-block;
+            padding: 12px 18px;
+            border: 0;
+            border-radius: 8px;
+            background: #1d4ed8;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .back { background: #475569; }
+
+        .flash {
+            padding: 12px;
+            border-radius: 7px;
+            margin-bottom: 12px;
+        }
+
+        .flash.danger { background: #fee2e2; color: #991b1b; }
+        .flash.warning { background: #fef3c7; color: #92400e; }
+    </style>
+</head>
+
+<body>
+<div class="form-card">
+
+    <h1>Create Savings Goal</h1>
+    <p>Set a financial target for your business.</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <label>Savings Goal Name *</label>
+        <input type="text" name="saving_name"
+               placeholder="e.g. Business Expansion"
+               maxlength="150" required>
+
+        <label>Target Amount (RWF) *</label>
+        <input type="number" name="target_amount"
+               min="0.01" step="0.01" required>
+
+        <label>Start Date *</label>
+        <input type="date" name="start_date" required>
+
+        <label>Target Date (Optional)</label>
+        <input type="date" name="target_date">
+
+        <label>Notes</label>
+        <textarea name="notes" rows="4"
+                  placeholder="Additional information about this savings goal"></textarea>
+
+        <button type="submit">Create Savings Goal</button>
+
+        <a class="back" href="{{ url_for('savings_overview') }}">Cancel</a>
+
+    </form>
+</div>
+</body>
+</html>

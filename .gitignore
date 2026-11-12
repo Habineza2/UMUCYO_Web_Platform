@@ -1,0 +1,28 @@
+
+# Python environment
+.venv/
+venv/
+
+# Private configuration and secrets
+.env
+.env.*
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Python temporary files
+__pycache__/
+*.py[cod]
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# Editor settings
+.vscode/
+
+# Test and cache files
+.pytest_cache/
+.mypy_cache/
